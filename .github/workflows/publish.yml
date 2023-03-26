@@ -34,9 +34,9 @@ jobs:
 
       - name: Add credentials 🔒
         run: |
+          echo "//npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN" > ~/.npmrc
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
-          echo "//npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN" > ~/.npmrc
 
       - name: Install Deno ⬇️
         uses: denoland/setup-deno@v1
@@ -44,7 +44,7 @@ jobs:
           deno-version: v1.x
 
       - name: Install dependencies ⬇️
-        run: npm ci
+        run: npm i
 
       - name: Build ⚒️
         run: npm run build
