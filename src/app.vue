@@ -1,14 +1,14 @@
 <template>
   <div>
-    <UiPre :json="{ navbarGrouped, navbar }" />
-    <div>
-      <TestSelect :elements="navbarGrouped" :indent="1"/>
-  </div>
+    <UiPre :json="{ navigationPages, navbarPageLabels, groupedNavbar }" />
+    <!-- <div>
+      <TestSelect :elements="navbarGrouped" :indent="1" />
+    </div> -->
 
-    <!-- <NuxtPage> </NuxtPage> -->
+    <NuxtPage> </NuxtPage>
   </div>
 </template>
 
 <script setup>
-  const { navbarGrouped, navbar } = useStoreNavigation()
+  const { navigationPages, navbarPageLabels, groupedNavbar } = useStoreNavigation()
 </script>

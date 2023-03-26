@@ -3,9 +3,5 @@
 </template>
 
 <script setup>
-  definePageMeta({
-    navbar: {
-      show: true,
-    },
-  })
+
 </script>

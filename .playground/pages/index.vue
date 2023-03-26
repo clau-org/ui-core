@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-red-500 h-screen">
+  <div class="">
     Index page
 
     <!-- <button @click="toggleLoading()">toggleLoading - {{ loading }}</button>
@@ -16,4 +16,5 @@
 
 <script setup>
   // const [loading, toggleLoading] = useToggle()
+  
 </script>
