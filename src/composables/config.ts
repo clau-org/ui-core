@@ -1,4 +1,4 @@
-export const useClauConfig = () => {
+export const useConfig = () => {
   // env
   const env = useRuntimeConfig().public
   const { BASE_BUCKET } = env
