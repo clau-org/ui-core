@@ -11,10 +11,10 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  loading: {
-    type: Boolean,
-    default: false,
-  },
-});
+  const props = defineProps({
+    loading: {
+      type: Boolean,
+      default: false,
+    },
+  })
 </script>

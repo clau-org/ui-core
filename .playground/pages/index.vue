@@ -14,16 +14,16 @@
 </template>
 
 <script setup>
-const {
-  brand: { favicon, logo },
-} = useClauConfig();
+  const {
+    brand: { favicon, logo },
+  } = useClauConfig()
 
-const [loading, toggleLoading] = useToggle();
+  const [loading, toggleLoading] = useToggle()
 
-loading.value = true;
-logger.info("hola");
-logger.info({
-  favicon,
-  logo,
-});
+  loading.value = true
+  logger.info('hola')
+  logger.info({
+    favicon,
+    logo,
+  })
 </script>

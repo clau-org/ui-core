@@ -9,6 +9,9 @@
     "generate": "nuxt generate .playground",
     "preview": "cd .playground/.output/ && deno run -A --watch server/index.ts",
     "prepare": "nuxt prepare .playground",
+    "format": "npx prettier --write .",
+    "preversion": "npm run format",
+    
     "patch": "npm version patch && npm publish",
     "minor": "npm version minor && npm publish",
     "major": "npm version major && npm publish"

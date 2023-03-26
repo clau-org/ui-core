@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       workflow:
-        description: "Workflow file path"
+        description: 'Workflow file path'
         type: string
 run-name: Delete workflows ${{ inputs.workflow }} by @${{ github.actor }}
 env:
@@ -17,7 +17,7 @@ jobs:
         uses: MajorScruffy/delete-old-workflow-runs@v0.3.0
         with:
           repository: ${{ github.repository }}
-          older-than-seconds: 1 
+          older-than-seconds: 1
           workflow: ${{ inputs.workflow }}
   delete-all-runs:
     runs-on: ubuntu-latest
@@ -26,5 +26,5 @@ jobs:
       - name: Delete workflow runs
         uses: MajorScruffy/delete-old-workflow-runs@v0.3.0
         with:
-          repository:  ${{ github.repository }}
+          repository: ${{ github.repository }}
           older-than-seconds: 1

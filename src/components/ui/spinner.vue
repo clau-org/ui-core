@@ -22,10 +22,10 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  spinnerClass: {
-    type: String,
-    default: "text-white fill-indigo-600",
-  },
-});
+  const props = defineProps({
+    spinnerClass: {
+      type: String,
+      default: 'text-white fill-indigo-600',
+    },
+  })
 </script>

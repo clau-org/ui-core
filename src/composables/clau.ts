@@ -1,12 +1,12 @@
 export const useClauConfig = () => {
   // env
-  const env = useRuntimeConfig().public;
-  const { BASE_BUCKET } = env;
+  const env = useRuntimeConfig().public
+  const { BASE_BUCKET } = env
 
   // Brand
-  const favicon = `${BASE_BUCKET}/favicon.ico`;
-  const logo = `${BASE_BUCKET}/logo.jpg`;
-  const name = `Clau`;
+  const favicon = `${BASE_BUCKET}/favicon.ico`
+  const logo = `${BASE_BUCKET}/logo.jpg`
+  const name = `Clau`
 
   return {
     ...env,
@@ -15,5 +15,5 @@ export const useClauConfig = () => {
       logo,
       name,
     },
-  };
-};
+  }
+}
