@@ -16,8 +16,8 @@ on:
           - minor
           - major
 
-run-name: "Publish '${{ github.ref == 'refs/heads/main' && inputs.version || 'patch' }}'.${{ github.event.head_commit.message && ' Commit message ' + github.event.head_commit.message }}"
-
+run-name: |
+  Publish '${{ github.ref == 'refs/heads/main' && inputs.version || 'patch' }}'${{ github.event.head_commit.message && ' Commit message ' + github.event.head_commit.message }}
 env:
   NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   NODE_OPTIONS: "--max_old_space_size=4096"
