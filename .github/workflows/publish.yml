@@ -16,7 +16,7 @@ on:
         - minor
         - major
 
-run-name: "Publish '${{ github.ref == 'refs/heads/main' && inputs.version || 'patch' }}' to npm package. Commit message '${{ github.event.head_commit.message }}'"
+run-name: "Publish '${{ github.ref == 'refs/heads/main' && inputs.version || 'patch' }}'. Commit message '${{ github.event.head_commit.message }}'"
 
 env:
   NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -27,16 +27,14 @@ jobs:
   build-publish:
     runs-on: ubuntu-latest
     name: Publish npm package UI
+    if: "!contains(github.event.head_commit.message, '[skip]')"
 
     steps:
       - name: Checkout code 📁
         uses: actions/checkout@v3
 
-      - name: Add credentials 🔒
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN" > ~/.npmrc
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "GitHub Actions"
+      - name: Add npm credentials 🔒
+        run:  echo "//npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN" > ~/.npmrc
 
       - name: Install Deno ⬇️
         uses: denoland/setup-deno@v1
@@ -44,7 +42,7 @@ jobs:
           deno-version: v1.x
 
       - name: Install dependencies ⬇️
-        run: npm i
+        run: npm ci
 
       - name: Build ⚒️
         run: npm run build
@@ -54,6 +52,8 @@ jobs:
 
       - name: Publish 🚀
         run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
           npm version ${{ github.ref == 'refs/heads/main' && inputs.version || 'patch' }} -m "Version %s by ${{ github.actor }}"
           npm publish
           git push
