@@ -37,7 +37,7 @@ export const useStoreNavigation = defineStore('Navigation', () => {
   const footer = ref<PageLabel[]>([])
 
   // Computed property that groups navbar items based on their routes
-  const groupedNavbar = computed(() => {
+  const navbarGrouped = computed(() => {
     return _getGroupedPageLabels(pages.value)
   })
 
@@ -65,7 +65,6 @@ export const useStoreNavigation = defineStore('Navigation', () => {
    * @returns {PageLabel[]} - Grouped pages
    */
   function _getGroupedPageLabels(pages: Page[]): PageLabel[] {
-    const tmpNavbar: Page[] = []
     const groupedPages: PageLabel[] = []
 
     // Group pages in tmpNavbar based on their route
@@ -112,7 +111,6 @@ export const useStoreNavigation = defineStore('Navigation', () => {
 
       // Add the page to the subPageLabels of the parent PageLabel
       if (parent && page.title) {
-        // logger.info({ currentNavbar, title: page.title })
         parent.push({
           id: page.title,
           title: page.title,
@@ -142,11 +140,13 @@ export const useStoreNavigation = defineStore('Navigation', () => {
   }) {
     const newPage = Object.assign({}, defaultPage, page)
     if (newPage[label]?.show) {
+      // Extract the last segment of the route to use as the default title for the page label, if not already set
+      let title = newPage[label].route?.split('/')?.slice(-1)[0]
+
       newPage[label].id = newPage[label].id || newPage.id
-      newPage[label].title = newPage[label].title || newPage.id
+      newPage[label].title = title || newPage.id
       newPage[label].route = newPage[label].route ?? newPage.route
       newPage[label].index = newPage[label].index ?? target.value.length
-
       target.value.push(newPage[label])
     }
   }
@@ -196,8 +196,10 @@ export const useStoreNavigation = defineStore('Navigation', () => {
 
   return {
     pages,
+
     navbar,
-    groupedNavbar,
+    navbarGrouped,
+
     sidebar,
     footer,
 
