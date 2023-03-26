@@ -1,10 +1,10 @@
 <template>
   <div>
-    <UiPre :json="{ pages }" />
+    <UiPre :json="{ pages, navbar, groupedNavbar }" />
     <NuxtPage> </NuxtPage>
   </div>
 </template>
 
 <script setup>
-  const { pages, navbar, sidebar, footer } = useStoreNavigation()
+  const { pages, navbar, groupedNavbar } = useStoreNavigation()
 </script>

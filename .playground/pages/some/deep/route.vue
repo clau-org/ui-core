@@ -1,9 +1,11 @@
 <template>
-  <div>Home Page</div>
+  <div>
+    some deep route
+  </div>
 </template>
 
 <script setup>
-  definePageMeta({
+definePageMeta({
     navbar: {
       show: true,
     },

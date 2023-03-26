@@ -15,15 +15,5 @@
 </template>
 
 <script setup>
-  definePageMeta({
-    id: 'index',
-    route: '/',
-    title: 'index',
-    description: 'index-description',
-    navbar: {
-      show: true,
-    },
-  })
-
   // const [loading, toggleLoading] = useToggle()
 </script>

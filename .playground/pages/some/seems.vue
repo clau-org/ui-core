@@ -1,9 +1,11 @@
 <template>
-  <div>Home Page</div>
+  <div>
+    seems
+  </div>
 </template>
 
 <script setup>
-  definePageMeta({
+definePageMeta({
     navbar: {
       show: true,
     },

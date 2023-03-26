@@ -1,15 +1,20 @@
 export const useConfig = () => {
-  // env
-  const env = useRuntimeConfig().public
-  const { BASE_BUCKET } = env
+  // Runtime configuration
+  const { public: publicRuntimeConfig, ...runtimeConfig } = useRuntimeConfig()
+
+  // App configuration
+  const appConfig = useAppConfig()
 
   // Brand
+  const { BASE_BUCKET } = publicRuntimeConfig
   const favicon = `${BASE_BUCKET}/favicon.ico`
   const logo = `${BASE_BUCKET}/logo.jpg`
   const name = `Clau`
 
   return {
-    ...env,
+    ...runtimeConfig,
+    ...publicRuntimeConfig,
+    ...appConfig,
     brand: {
       favicon,
       logo,
