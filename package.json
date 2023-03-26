@@ -1,7 +1,7 @@
 {
   "name": "@clau-org/ui-core",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./nuxt.config.ts",
   "scripts": {
     "dev": "nuxi dev .playground",
@@ -11,7 +11,6 @@
     "prepare": "nuxt prepare .playground",
     "format": "npx prettier --write .",
     "preversion": "npm run format",
-    
     "patch": "npm version patch && npm publish",
     "minor": "npm version minor && npm publish",
     "major": "npm version major && npm publish"
