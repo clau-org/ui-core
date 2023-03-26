@@ -33,12 +33,11 @@ jobs:
       - name: Checkout code 📁
         uses: actions/checkout@v3
 
-      - name: Add npm credentials 🔒
+      - name: Add credentials 🔒
         run:  |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
           echo "//npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN" > ~/.npmrc
-          echo "//npm.pkg.github.com/:_authToken=$NODE_AUTH_TOKEN" > .npmrc
-          echo .npmrc
-          echo ~/.npmrc
 
 
       - name: Install Deno ⬇️
@@ -57,8 +56,6 @@ jobs:
 
       - name: Publish 🚀
         run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "GitHub Actions"
           npm version ${{ github.ref == 'refs/heads/main' && inputs.version || 'patch' }} -m "Version %s by ${{ github.actor }}"
           npm publish
           git push
