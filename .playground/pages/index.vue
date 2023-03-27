@@ -15,6 +15,19 @@
 </template>
 
 <script setup>
-  // const [loading, toggleLoading] = useToggle()
-  
+
+/**
+ * WARNING: Index page should not appear on navbar, footer or sidebar
+ */
+  definePageMeta({
+    navbar: {
+      show: false,
+    },
+    footer: {
+      show: false,
+    },
+    sidebar: {
+      show: false,
+    },
+  })
 </script>

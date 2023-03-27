@@ -23,24 +23,18 @@ type Page = {
   [key: string]: any
 }
 
-function getUniqueObjects({ arr, prop }: { arr: any[]; prop: string }) {
-  const set = new Set(arr.map((e) => e[prop]))
-  const uniqueObjs = [...set].map((id) => arr.find((e: any) => e[prop] === id))
-  return uniqueObjs
-}
-
 // Default values for a PageLabel object
 const defaultPageLabel: PageLabel = {
-  id: '',
-  show: true,
+  id: '', // Its important to be empty
+  show: false, // Its important to be false
   index: 0,
   subPageLabels: [],
 }
 
 // Default values for a Page object
 const defaultPage: Page = {
-  id: '',
-  route: '',
+  id: '', // Its important to be empty
+  route: '', // Its important to be empty
   navbar: { ...defaultPageLabel },
   sidebar: { ...defaultPageLabel },
   footer: { ...defaultPageLabel },
@@ -49,7 +43,6 @@ const defaultPage: Page = {
 /**
  * Function to format Page Label
  */
-
 function formatPageLabel({
   pageLabel,
   page,
@@ -58,14 +51,10 @@ function formatPageLabel({
   page: Page
 }): PageLabel {
   let route = pageLabel.route ?? page.route
-  let id = pageLabel.id || page.id
-
   // Extract the last segment of the route to use as the default title for the page label, if not already set
   let title = route?.split('/')?.slice(-1)[0]
-
-  const formattedPageLabel = { ...pageLabel, id, route, title }
-
-  return formattedPageLabel
+  let id = pageLabel.id || page.id
+  return { ...pageLabel, id, route, title }
 }
 
 /**
@@ -79,26 +68,26 @@ function addPageToPages({
   page: Page
   pages: Page[]
 }): Page[] {
+  // New pages
+  let newPages: Page[] = [...pages]
+
   // Check if page ID already exists in pages array
-  const pageExists = pages.some((p) => p.id === page.id)
+  const pageExists = newPages.some((currentPage) => currentPage.id === page.id)
 
   // If page ID does not exist, push the page to the array
   if (!pageExists) {
-    const newPage = { ...defaultPage, ...page }
-
     let pageLabels = ['navbar', 'footer', 'sidebar']
-    pageLabels.forEach((pageLabel) => {
+    const newPage = { ...defaultPage, ...page }
+    for (const pageLabel of pageLabels) {
       if (newPage[pageLabel])
         newPage[pageLabel] = formatPageLabel({
           pageLabel: newPage[pageLabel],
           page,
         })
-    })
-
-    pages.push(newPage)
+    }
+    newPages.push(newPage)
   }
-
-  return pages
+  return newPages
 }
 
 /**
@@ -110,256 +99,199 @@ function addPageToPages({
 function getRoutesAsPages(): Page[] {
   const router = useRouter()
   let routes = router.options.routes
-  let pages: Page[] = []
-
-  routes.forEach((route) => {
+  return routes.map((route) => {
     const { meta, name, path } = route
-
-    pages.push({
+    return {
       id: name,
       route: path,
       ...(meta as any),
-    })
+    }
   })
-  return pages
 }
 
-function getTargetPageLabels({
+/**
+ * This function takes in an object with two properties: `pages`, an array of `Page` objects, and `target`, a string.
+ * @param param0
+ * @returns
+ */
+function getTargetPages({
+  pages,
+  target,
+}: {
+  pages: Page[]
+  target: string
+}): Page[] {
+  // The `filter()` method is called on the `pages` array to return a new array with only the `Page` objects that meet the specified conditions.
+  return pages.filter((page: Page) => page[target].show && page.id !== 'index')
+}
+
+/**
+ * Groups the given list of pages by their target routes.
+ *
+ * @param {Object} params - The object containing the list of pages to group
+ * @param {Page[]} params.pages - List of pages to group
+ * @returns {PageLabel[]} - Grouped pages
+ */
+function getGroupedPageLabels({
   pages,
   target,
 }: {
   pages: Page[]
   target: string
 }): PageLabel[] {
-  let pageLabels: PageLabel[] = []
-
-  pages.forEach((page: Page) => {
-    let currentPageLabel: PageLabel = page[target]
-
-    if (currentPageLabel.show) {
-      pageLabels.push(currentPageLabel)
-    }
-  })
-
-  return pageLabels
-}
-
-/**
- * Groups the given list of pages by their navbar routes.
- *
- * @param {Object} params - The object containing the list of pages to group
- * @param {Page[]} params.pages - List of pages to group
- * @returns {PageLabel[]} - Grouped pages
- */
-function _groupPageLabels({ pages }: { pages: Page[] }): PageLabel[] {
+  // Initialize an empty array to store the grouped pages
   const groupedPages: PageLabel[] = []
 
-  // Group pages in tmpNavbar based on their route
-  pages.forEach((page: Page) => {
+  // Iterate through each page and group them based on their routes
+  for (const page of pages) {
+    // Initialize variables for the parent, parent label, and current target
     let parent = null
     let parentLabel = null
-    let { navbar: { id, title, ...currentNavbar } = {} } = page
+    let currentTarget: PageLabel = page[target] ?? {}
 
+    // Destructure the `id`, `title`, and `targetData` properties from the current target object
+    let { id, title, ...targetData } = currentTarget
+
+    // Split the route of the current page by forward slashes and filter out any empty segments
     const routeSegments = page.route.split('/').filter(Boolean)
 
+    // Log the `routeSegments` for debugging purposes
+    logger.debug('[method: groupPageLabels]', '[routeSegments]', {
+      routeSegments,
+    })
+
+    // Iterate through each segment of the route of the current page
     for (const [index, segment] of routeSegments.entries()) {
+      // If this is the first segment of the route
       if (!parent) {
+        // Find the parent label with a matching title in the `groupedPages` array
         parentLabel = groupedPages.find((group) => group.title === segment)
+        // If a parent label doesn't exist, create a new one and push it to the `groupedPages` array
         if (!parentLabel) {
-          // logger.info({ currentNavbar, title: segment })
           parentLabel = {
             id: segment,
             title: segment,
             subPageLabels: [],
-            ...currentNavbar,
+            ...targetData,
           }
           groupedPages.push(parentLabel)
         }
 
+        // Set the `parent` variable to the subPageLabels array of the parent label
         parent = parentLabel.subPageLabels
       } else {
+        // Find the sub-page label with a matching title in the `parent` array
         const subPageLabel: any = parent.find(
           (group: any) => group.title === segment,
         )
+        // If a sub-page label doesn't exist, create a new one and push it to the `parent` array
         if (!subPageLabel) {
-          // logger.info({ currentNavbar, title: segment })
           parent.push({
             id: segment,
             title: segment,
             subPageLabels: [],
-            ...currentNavbar,
+            ...targetData,
           })
+          // Set the `parent` variable to the subPageLabels array of the newly created sub-page label
           parent = parent[parent.length - 1].subPageLabels
         } else {
+          // If a sub-page label already exists, set the `parent` variable to its subPageLabels array
           parent = subPageLabel.subPageLabels
         }
       }
     }
 
-    // Add the page to the subPageLabels of the parent PageLabel
+    // Add the current page to the subPageLabels array of the parent label, if it exists and has a title
     if (parent && page.title) {
       parent.push({
         id: page.title,
         title: page.title,
         description: page.description || '',
-        ...currentNavbar,
+        ...targetData,
       })
     }
-  })
+  }
 
+  // Return the `groupedPages` array
   return groupedPages
 }
 
-function groupPages({ pages }: { pages: Page[] }) {
-  let pageRoutesAsArray = pages.map((page) => {
-    let currentPage = page
+// This function defines a navigation store that holds all the defined pages.
+function defineStoreNavigation() {
+  // Create a reactive reference to an array of page objects.
+  const appPages = ref<Page[]>([])
 
-    if (currentPage.route === '/') currentPage.route = '/index'
+  // Get Vue Router Routes as Pages
+  const nuxtPages = getRoutesAsPages()
 
-    let routeAsArray = currentPage.route
-      .split('/')
-      .filter((route) => route)
-      .map((e) => ({
-        id: e,
-        page,
-      }))
+  // Loop through the Vue Router routes and add them to the appPages array.
+  for (const nuxtPage of nuxtPages) {
+    appPages.value = addPageToPages({
+      pages: appPages.value,
+      page: { ...nuxtPage },
+    })
+  }
 
-    // logger.info(
-    //   prettyJson({
-    //     routeAsArray,
-    //   }),
-    // )
-
-    return routeAsArray
+  // Define computed properties for the navbar, footer, and sidebar pages.
+  const navbar = computed((): Page[] => {
+    return getTargetPages({
+      pages: appPages.value,
+      target: 'navbar',
+    })
   })
 
-  let maxArrayLength = Math.max(
-    ...pageRoutesAsArray.map((array) => array.length),
-  )
+  const footer = computed((): Page[] => {
+    return getTargetPages({
+      pages: appPages.value,
+      target: 'footer',
+    })
+  })
 
-  // logger.info(prettyJson({
-  //   pageRoutesAsArray,
-  //   maxArrayLength,
-  // }))
+  const sidebar = computed((): Page[] => {
+    return getTargetPages({
+      pages: appPages.value,
+      target: 'sidebar',
+    })
+  })
 
-  // for (let i = 0; i <= maxArrayLength; i++) {
-  //   let some: any = {
-  //     i,
-  //   }
+  // Define computed properties for the grouped navbar, footer, and sidebar pages.
+  const navbarGrouped = computed(() => {
+    return getGroupedPageLabels({
+      pages: navbar.value,
+      target: 'navbar',
+    })
+  })
 
-  //   pageRoutesAsArray.forEach((routesAsArray) => {
-  //     logger.info({routesAsArray})
-  //     some[`${routesAsArray[i]}`] = routesAsArray[i]
-  //   })
+  const footerGrouped = computed(() => {
+    return getGroupedPageLabels({
+      pages: footer.value,
+      target: 'footer',
+    })
+  })
 
-  //   // logger.info({
-  //   //   some,
-  //   // })
-  // }
+  const sidebarGrouped = computed(() => {
+    return getGroupedPageLabels({
+      pages: sidebar.value,
+      target: 'sidebar',
+    })
+  })
 
-  let routeMatrix = pageRoutesAsArray
-
-
-  for(let i=0; i<=maxArrayLength; i++){
-    for(let j=0; j<=maxArrayLength; j++){
-      logger.info({
-        data: routeMatrix[i][j]?.id
-      })
-
-      routeMatrix[i][j] = routeMatrix[i][j]
-    } 
-  }
-
-  const getFirst = () => {
-    const firsElements = routeMatrix.map((e) => e[0]);
-
-    logger.info({firsElements})
-    const uniqueFirst = getUniqueObjects({
-      arr: firsElements,
-      prop: 'id',
-    }).map(e => e.page)
-
-    return uniqueFirst
-  }
-    
-
-  // let firsElements = routeMatrix.map((e) => e[0])
-
-  // const set = new Set(firsElements.map((e) => e.id))
-
-  // const uniqueObjs = [...set].map((id) => firsElements.find((e) => e.id === id))
-
-  // const arr = Array.from(new Set (routeMatrix.map((e) => e[0]).map(e => JSON.stringify(e)))).map(e => JSON.parse(e))
-
-  const getAfterFirst = (id: string) => {
-    let result = []
-    for (let i = 0; i < routeMatrix.length; i++) {
-      let currentArray = routeMatrix[i]
-      for (let j = 0; j < maxArrayLength; j++) {
-        let currentElement = routeMatrix[i][j]
-        // logger.info({
-        //   i,
-        //   j,
-        //   currentElement,
-        // })
-
-        if (currentElement?.id === id) {
-          result.push(currentArray[0].page)
-        }
-      }
-    }
-
-    return result
-  }
-
-  logger.info(
-    prettyJson({
-      // routeMatrix,
-      first: getFirst(),
-      // uniqueObjs
-      // getAfterFirst: getAfterFirst('home'),
-    }),
-  )
-
+  // Return an object containing all the defined properties.
   return {
-    pageRoutesAsArray,
-    maxArrayLength,
+    appPages,
+    nuxtPages,
+
+    navbar,
+    footer,
+    sidebar,
+
+    navbarGrouped,
+    footerGrouped,
+    sidebarGrouped,
   }
 }
 
-export const useStoreNavigation = defineStore('Navigation', () => {
-  // Holds all the defined pages
-  const navigationPages = ref<Page[]>([])
-
-  // Vue Router Routes as Pages
-  const routesAsPages = getRoutesAsPages()
-
-  // Add routes to Navigation Pages
-  routesAsPages.forEach((routeAsPage) => {
-    addPageToPages({
-      pages: navigationPages.value,
-      page: routeAsPage,
-    })
-  })
-
-  const navbarPageLabels = computed((): PageLabel[] =>
-    getTargetPageLabels({
-      pages: navigationPages.value,
-      target: 'navbar',
-    }),
-  )
-
-  const groupedNavbar = computed(() => {
-    return groupPages({
-      pages: navigationPages.value,
-    })
-  })
-
-  return {
-    navigationPages,
-    routesAsPages,
-
-    navbarPageLabels,
-    groupedNavbar,
-  }
-})
+export const useStoreNavigation = defineStore(
+  'Navigation',
+  defineStoreNavigation,
+)

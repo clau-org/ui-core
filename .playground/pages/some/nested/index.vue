@@ -1,7 +1,17 @@
 <template>
-  <div>
-    hi
-  </div>
+  <div>hi</div>
 </template>
 
-<script setup></script>
+<script setup>
+  definePageMeta({
+    navbar: {
+      show: true,
+    },
+    footer: {
+      show: true,
+    },
+    sidebar: {
+      show: true,
+    },
+  })
+</script>
