@@ -50,6 +50,9 @@ jobs:
       - name: Build ⚒️
         run: npm run build
 
+      - name; Test 🧪
+        run: npm run test
+
       - name: Preview 👀
         run: npm run preview & sleep 1 && kill $!
 

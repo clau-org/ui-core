@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
+import { ref, computed } from 'vue'
 
-type PageLabel = {
+export type PageLabel = {
   id: string
   index?: number
   show?: boolean
@@ -11,7 +12,7 @@ type PageLabel = {
   subPageLabels?: PageLabel[]
 }
 
-type Page = {
+export type Page = {
   id: string
   route: string
   title?: string
@@ -24,7 +25,7 @@ type Page = {
 }
 
 // Default values for a PageLabel object
-const defaultPageLabel: PageLabel = {
+export const _defaultPageLabel: PageLabel = {
   id: '', // Its important to be empty
   show: false, // Its important to be false
   index: 0,
@@ -32,27 +33,27 @@ const defaultPageLabel: PageLabel = {
 }
 
 // Default values for a Page object
-const defaultPage: Page = {
+export const _defaultPage: Page = {
   id: '', // Its important to be empty
   route: '', // Its important to be empty
-  navbar: { ...defaultPageLabel },
-  sidebar: { ...defaultPageLabel },
-  footer: { ...defaultPageLabel },
+  navbar: { ..._defaultPageLabel },
+  sidebar: { ..._defaultPageLabel },
+  footer: { ..._defaultPageLabel },
 }
 
 /**
  * Function to format Page Label
  */
-function formatPageLabel({
+export function _formatPageLabel({
   pageLabel,
   page,
 }: {
-  pageLabel: PageLabel
+  pageLabel: Partial<PageLabel>
   page: Page
 }): PageLabel {
   let route = pageLabel.route ?? page.route
   // Extract the last segment of the route to use as the default title for the page label, if not already set
-  let title = route?.split('/')?.slice(-1)[0]
+  let title = pageLabel.title ?? route?.split('/')?.slice(-1)[0]
   let id = pageLabel.id || page.id
   return { ...pageLabel, id, route, title }
 }
@@ -61,7 +62,7 @@ function formatPageLabel({
  * Function to define the data for a Page
  * @param page
  */
-function addPageToPages({
+export function _addPageToPages({
   page,
   pages,
 }: {
@@ -77,10 +78,10 @@ function addPageToPages({
   // If page ID does not exist, push the page to the array
   if (!pageExists) {
     let pageLabels = ['navbar', 'footer', 'sidebar']
-    const newPage = { ...defaultPage, ...page }
+    const newPage = { ..._defaultPage, ...page }
     for (const pageLabel of pageLabels) {
       if (newPage[pageLabel])
-        newPage[pageLabel] = formatPageLabel({
+        newPage[pageLabel] = _formatPageLabel({
           pageLabel: newPage[pageLabel],
           page,
         })
@@ -96,7 +97,7 @@ function addPageToPages({
  * name and its route to the route's path. The Page's additional properties will
  * be set based on the route's `meta` object (if any).
  */
-function getRoutesAsPages(): Page[] {
+export function _getRoutesAsPages(): Page[] {
   const router = useRouter()
   let routes = router.options.routes
   return routes.map((route) => {
@@ -114,7 +115,7 @@ function getRoutesAsPages(): Page[] {
  * @param param0
  * @returns
  */
-function getTargetPages({
+export function _getTargetPages({
   pages,
   target,
 }: {
@@ -132,7 +133,7 @@ function getTargetPages({
  * @param {Page[]} params.pages - List of pages to group
  * @returns {PageLabel[]} - Grouped pages
  */
-function getGroupedPageLabels({
+export function _getGroupedPageLabels({
   pages,
   target,
 }: {
@@ -217,16 +218,16 @@ function getGroupedPageLabels({
 }
 
 // This function defines a navigation store that holds all the defined pages.
-function defineStoreNavigation() {
+export function _defineStoreNavigation() {
   // Create a reactive reference to an array of page objects.
   const appPages = ref<Page[]>([])
 
   // Get Vue Router Routes as Pages
-  const nuxtPages = getRoutesAsPages()
+  const nuxtPages = _getRoutesAsPages()
 
   // Loop through the Vue Router routes and add them to the appPages array.
   for (const nuxtPage of nuxtPages) {
-    appPages.value = addPageToPages({
+    appPages.value = _addPageToPages({
       pages: appPages.value,
       page: { ...nuxtPage },
     })
@@ -234,21 +235,21 @@ function defineStoreNavigation() {
 
   // Define computed properties for the navbar, footer, and sidebar pages.
   const navbar = computed((): Page[] => {
-    return getTargetPages({
+    return _getTargetPages({
       pages: appPages.value,
       target: 'navbar',
     })
   })
 
   const footer = computed((): Page[] => {
-    return getTargetPages({
+    return _getTargetPages({
       pages: appPages.value,
       target: 'footer',
     })
   })
 
   const sidebar = computed((): Page[] => {
-    return getTargetPages({
+    return _getTargetPages({
       pages: appPages.value,
       target: 'sidebar',
     })
@@ -256,21 +257,21 @@ function defineStoreNavigation() {
 
   // Define computed properties for the grouped navbar, footer, and sidebar pages.
   const navbarGrouped = computed(() => {
-    return getGroupedPageLabels({
+    return _getGroupedPageLabels({
       pages: navbar.value,
       target: 'navbar',
     })
   })
 
   const footerGrouped = computed(() => {
-    return getGroupedPageLabels({
+    return _getGroupedPageLabels({
       pages: footer.value,
       target: 'footer',
     })
   })
 
   const sidebarGrouped = computed(() => {
-    return getGroupedPageLabels({
+    return _getGroupedPageLabels({
       pages: sidebar.value,
       target: 'sidebar',
     })
@@ -293,5 +294,5 @@ function defineStoreNavigation() {
 
 export const useStoreNavigation = defineStore(
   'Navigation',
-  defineStoreNavigation,
+  _defineStoreNavigation,
 )
