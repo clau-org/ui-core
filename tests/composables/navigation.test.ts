@@ -32,35 +32,67 @@ describe('[STORE NAVIGATION]', async () => {
     test('expect default route to me empty', ({ expect }) => {
       expect(_defaultPage.route).toBe('')
     })
-  })a
+  })
 
   describe('_formatPageLabel - Method to format page labels', () => {
     const pageLabel = { id: '1', route: '/page1', title: 'Page 1' }
     const page = { id: '1', route: '/page1', title: 'Page 1' }
-  
-    test('returns expected page label when both page label and page have route and title', ({ expect }) => {
+
+    test('returns expected page label when both page label and page have route and title', ({
+      expect,
+    }) => {
       const formattedPageLabel = _formatPageLabel({ pageLabel, page })
-      expect(formattedPageLabel).toEqual({ id: '1', route: '/page1', title: 'Page 1' })
+      expect(formattedPageLabel).toEqual({
+        id: '1',
+        route: '/page1',
+        title: 'Page 1',
+      })
     })
-  
-    test('sets title to last segment of route when title is not defined in page label', ({ expect }) => {
-      const formattedPageLabel = _formatPageLabel({ pageLabel: { route: '/page1' }, page })
+
+    test('sets title to last segment of route when title is not defined in page label', ({
+      expect,
+    }) => {
+      const formattedPageLabel = _formatPageLabel({
+        pageLabel: { route: '/page1' },
+        page,
+      })
       expect(formattedPageLabel.title).toBe('page1')
     })
-  
-    test('sets title to last segment of route when title is not defined in page', ({ expect }) => {
-      let {title, ...testPageLabel} = pageLabel
-      const formattedPageLabel = _formatPageLabel({ pageLabel: testPageLabel, page: { route: '/page1' } })
+
+    test('sets title to last segment of route when title is not defined in page', ({
+      expect,
+    }) => {
+      let { title, ...testPageLabel } = pageLabel
+      const formattedPageLabel = _formatPageLabel({
+        pageLabel: testPageLabel,
+        page: { route: '/page1' },
+      })
       expect(formattedPageLabel.title).toBe('page1')
     })
-  
-    test('sets id to page label id if defined, otherwise sets it to page id', ({ expect }) => {
-      const formattedPageLabel1 = _formatPageLabel({ pageLabel: { id: '2' }, page })
+
+    test('sets id to page label id if defined, otherwise sets it to page id', ({
+      expect,
+    }) => {
+      const formattedPageLabel1 = _formatPageLabel({
+        pageLabel: { id: '2' },
+        page,
+      })
       expect(formattedPageLabel1.id).toBe('2')
-  
+
       const formattedPageLabel2 = _formatPageLabel({ pageLabel: {}, page })
       expect(formattedPageLabel2.id).toBe('1')
     })
   })
-  
+
+  describe('_addPageToPages - Method to add a page to the global pages', async () => {
+    test('expect ', ({ expect }) => {})
+  })
+
+  describe('_getRoutesAsPages - Method to get the Nuxt Routes as Page objects', async () => {
+    test('expect ', ({ expect }) => {})
+  })
+
+  describe('_getTargetPages - Method to get the Pages of a given PageLabel target', async () => {
+    test('expect ', ({ expect }) => {})
+  })
 })
