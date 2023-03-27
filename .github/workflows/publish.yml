@@ -50,7 +50,7 @@ jobs:
       - name: Build ⚒️
         run: npm run build
 
-      - name; Test 🧪
+      - name: Test 🧪
         run: npm run test
 
       - name: Preview 👀
