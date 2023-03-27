@@ -2,7 +2,36 @@
   <div class="">
     Index page
 
-    <!-- <button @click="toggleLoading()">toggleLoading - {{ loading }}</button>
+    <UiPre
+      :json="{
+        appPages,
+        nuxtPages,
+
+        navbar,
+        footer,
+        sidebar,
+
+        navbarGrouped,
+        footerGrouped,
+        sidebarGrouped,
+      }"
+    />
+    <div class="max-w-sm">
+      <h1>NAVBAR</h1>
+      <UiPageLabel :pageLabels="navbarGrouped" />
+    </div>
+
+    <div class="max-w-sm">
+      <h1>FOOTER</h1>
+      <UiPageLabel :pageLabels="footerGrouped" />
+    </div>
+
+    <div class="max-w-sm">
+      <h1>SIDEBAR</h1>
+      <UiPageLabel :pageLabels="sidebarGrouped" />
+    </div>
+
+    <button @click="toggleLoading()">toggleLoading - {{ loading }}</button>
 
     <UiLoading :loading="loading">
       <UiPre :json="{ pages, navbar, sidebar, footer }" />
@@ -10,15 +39,15 @@
 
     <UiImg src="/logo.jpg" class="max-w-lg rounded-lg m-1" />
     <UiDivider text="Hi" />
-    <UiSpinner /> -->
+    <UiSpinner />
   </div>
 </template>
 
 <script setup>
-
-/**
- * WARNING: Index page should not appear on navbar, footer or sidebar
- */
+  const [loading, toggleLoading] = useToggle()
+  /**
+   * WARNING: Index page should not appear on navbar, footer or sidebar
+   */
   definePageMeta({
     navbar: {
       show: false,
@@ -30,4 +59,17 @@
       show: false,
     },
   })
+
+  const {
+    appPages,
+    nuxtPages,
+
+    navbar,
+    footer,
+    sidebar,
+
+    navbarGrouped,
+    footerGrouped,
+    sidebarGrouped,
+  } = useStoreNavigation()
 </script>
