@@ -58,6 +58,7 @@
     sidebar: {
       show: false,
     },
+    layout: 'dev',
   })
 
   const {
