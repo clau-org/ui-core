@@ -1,17 +1,17 @@
 <template>
-  <div>Home Page</div>
+  <div></div>
 </template>
 
 <script setup>
-definePageMeta({
+ definePageMeta({
     navbar: {
-      show: false,
+      show: true,
     },
     footer: {
       show: true,
     },
     sidebar: {
-      show: false,
+      show: true,
     },
   })
 </script>
