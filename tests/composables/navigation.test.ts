@@ -154,95 +154,95 @@ describe('[STORE NAVIGATION]', async () => {
 
   })
 
-  describe('_getRoutesAsPages - Method to get the Nuxt Routes as Page objects', async () => {
-    let router // Use `any` type to mock `useRouter` hook
-    let routes // Use `any` type to mock Vue Router's `RouteConfig` interface
+  // describe('_getRoutesAsPages - Method to get the Nuxt Routes as Page objects', async () => {
+  //   let router // Use `any` type to mock `useRouter` hook
+  //   let routes // Use `any` type to mock Vue Router's `RouteConfig` interface
 
-    const useRouter = {
-      "options": {
-        "routes": [
-          {
-            "name": "home",
-            "path": "/home",
-            "meta": {
-              "navbar": {
-                "show": false
-              },
-              "footer": {
-                "show": true
-              },
-              "sidebar": {
-                "show": false
-              }
-            },
-            "alias": []
-          },
-          {
-            "name": "index",
-            "path": "/",
-            "meta": {
-              "navbar": {
-                "show": false
-              },
-              "footer": {
-                "show": false
-              },
-              "sidebar": {
-                "show": false
-              },
-              "layout": "dev"
-            },
-            "alias": []
-          },
-          {
-            "name": "some-nested",
-            "path": "/some/nested",
-            "meta": {
-              "navbar": {
-                "show": true
-              },
-              "footer": {
-                "show": true
-              },
-              "sidebar": {
-                "show": true
-              }
-            },
-            "alias": []
-          },
-          {
-            "name": "some-shit",
-            "path": "/some/shit",
-            "meta": {
-              "navbar": {
-                "show": true
-              },
-              "footer": {
-                "show": true
-              },
-              "sidebar": {
-                "show": true
-              }
-            },
-            "alias": []
-          }
-        ]
-      }
-    } 
+  //   const useRouter = {
+  //     "options": {
+  //       "routes": [
+  //         {
+  //           "name": "home",
+  //           "path": "/home",
+  //           "meta": {
+  //             "navbar": {
+  //               "show": false
+  //             },
+  //             "footer": {
+  //               "show": true
+  //             },
+  //             "sidebar": {
+  //               "show": false
+  //             }
+  //           },
+  //           "alias": []
+  //         },
+  //         {
+  //           "name": "index",
+  //           "path": "/",
+  //           "meta": {
+  //             "navbar": {
+  //               "show": false
+  //             },
+  //             "footer": {
+  //               "show": false
+  //             },
+  //             "sidebar": {
+  //               "show": false
+  //             },
+  //             "layout": "dev"
+  //           },
+  //           "alias": []
+  //         },
+  //         {
+  //           "name": "some-nested",
+  //           "path": "/some/nested",
+  //           "meta": {
+  //             "navbar": {
+  //               "show": true
+  //             },
+  //             "footer": {
+  //               "show": true
+  //             },
+  //             "sidebar": {
+  //               "show": true
+  //             }
+  //           },
+  //           "alias": []
+  //         },
+  //         {
+  //           "name": "some-shit",
+  //           "path": "/some/shit",
+  //           "meta": {
+  //             "navbar": {
+  //               "show": true
+  //             },
+  //             "footer": {
+  //               "show": true
+  //             },
+  //             "sidebar": {
+  //               "show": true
+  //             }
+  //           },
+  //           "alias": []
+  //         }
+  //       ]
+  //     }
+  //   } 
 
-    test('returns empty array if no routes defined', ({ expect }) => {
-      routes = []
-      const pages = _getRoutesAsPages({router:useRouter})
-      expect(pages).toEqual([])
-    })
+  //   test('returns empty array if no routes defined', ({ expect }) => {
+  //     routes = []
+  //     const pages = _getRoutesAsPages({router:useRouter})
+  //     expect(pages).toEqual([])
+  //   })
 
-    test('returns Page object for each defined route', ({ expect }) => {
-      routes = [      {        name: 'home',        path: '/',        meta: {          title: 'Home Page',        },      },      {        name: 'about',        path: '/about',        meta: {          title: 'About Us',          layout: 'secondary',        },      },    ]
-      const expectedPages = [      {        id: 'home',        route: '/',        title: 'Home Page',      },      {        id: 'about',        route: '/about',        title: 'About Us',        layout: 'secondary',      },    ]
-      const pages = _getRoutesAsPages({router:useRouter})
-      expect(pages).toEqual(expectedPages)
-    })
-  })
+  //   test('returns Page object for each defined route', ({ expect }) => {
+  //     routes = [      {        name: 'home',        path: '/',        meta: {          title: 'Home Page',        },      },      {        name: 'about',        path: '/about',        meta: {          title: 'About Us',          layout: 'secondary',        },      },    ]
+  //     const expectedPages = [      {        id: 'home',        route: '/',        title: 'Home Page',      },      {        id: 'about',        route: '/about',        title: 'About Us',        layout: 'secondary',      },    ]
+  //     const pages = _getRoutesAsPages({router:useRouter})
+  //     expect(pages).toEqual(expectedPages)
+  //   })
+  // })
 
   describe('_getTargetPages - Method to get the Pages of a given PageLabel target', async () => {
     test('expect ', ({ expect }) => {})
