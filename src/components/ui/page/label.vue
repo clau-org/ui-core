@@ -1,38 +1,88 @@
 <template>
-    <div class="mx-5">
-      <div v-for="pageLabel in pageLabels" class="my-2">
-        <div v-if="getIfShouldShow(pageLabel)" class="my-2">
-          <button
-            class="flex w-full rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75"
-          >
-            <span class="underline">{{ pageLabel.title ?? pageLabel.id }}</span>
-          </button>
-        </div>
-  
-        <div v-else>
-          <HeadlessDisclosure v-slot="{ open }">
-            <HeadlessDisclosureButton
-              class="flex w-full rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75"
+  <div>
+    <!-- Iterate over the pageLabels array -->
+    <div v-for="pageLabel in pageLabels" :key="pageLabel.id">
+      <!-- Check if the pageLabel should be shown -->
+      <div v-if="getIfShouldShow(pageLabel)">
+        <!-- Expose a slot named "child" with the props "pageLabel" and "index" -->
+        <slot name="child" v-bind="{ pageLabel, index }"></slot>
+      </div>
+
+      <div v-else>
+        <!-- Use the HeadlessDisclosure component to show the pageLabel with subPageLabels -->
+        <HeadlessDisclosure v-slot="{ open: headlessOpen }">
+          <HeadlessDisclosureButton>
+            <!-- Expose a slot named "parent" with the props "open", "pageLabel", and "index" -->
+            <slot
+              name="parent"
+              v-bind="{ open: headlessOpen, pageLabel, index }"
+            ></slot>
+          </HeadlessDisclosureButton>
+
+          <HeadlessDisclosurePanel>
+            <!-- Re-invoke the UiPageLabel component recursively to show subPageLabels -->
+            <UiPageLabel
+              :pageLabels="pageLabel.subPageLabels"
+              :index="getIndexValue()"
             >
-              <span>{{ pageLabel.title ?? pageLabel.id }}</span>
-  
-              <ChevronDownIcon v-if="open" class="h-5 w-5 text-purple-500" />
-  
-              <ChevronRightIcon v-else class="h-5 w-5 text-purple-500" />
-            </HeadlessDisclosureButton>
-  
-            <HeadlessDisclosurePanel class="text-sm text-gray-500">
-              <UiPageLabel :pageLabels="pageLabel.subPageLabels" />
-            </HeadlessDisclosurePanel>
-          </HeadlessDisclosure>
-        </div>
+              <!-- Expose a slot named "child" with the props "pageLabelReinvocation" and "indexReinvocation" -->
+              <template
+                #child="{
+                  pageLabel: pageLabelReinvocation,
+                  index: indexReinvocation,
+                }"
+              >
+                <slot
+                  name="child"
+                  v-bind="{
+                    pageLabel: pageLabelReinvocation,
+                    index: indexReinvocation,
+                  }"
+                ></slot>
+              </template>
+
+              <!-- Expose a slot named "parent" with the props "openReinvocation", "pageLabelReinvocation", and "indexReinvocation" -->
+              <template
+                #parent="{
+                  open: openReinvocation,
+                  pageLabel: pageLabelReinvocation,
+                  index: indexReinvocation,
+                }"
+              >
+                <slot
+                  name="parent"
+                  v-bind="{
+                    open: openReinvocation,
+                    pageLabel: pageLabelReinvocation,
+                    index: indexReinvocation,
+                  }"
+                ></slot>
+              </template>
+            </UiPageLabel>
+          </HeadlessDisclosurePanel>
+        </HeadlessDisclosure>
       </div>
     </div>
-  </template>
-  
-  <script setup>
-    import { ChevronDownIcon, ChevronRightIcon } from '@heroicons/vue/20/solid'
-    const getIfShouldShow = (pageLabel) => pageLabel.subPageLabels.length === 0
-    const props = defineProps(['pageLabels'])
-  </script>
-  
+  </div>
+</template>
+
+<script setup>
+// Function to determine if the pageLabel should be shown
+const getIfShouldShow = (pageLabel) => pageLabel.subPageLabels.length === 0
+
+// Define the props for the component
+const props = defineProps({
+  pageLabels: {
+    type: Object,
+  },
+  index: {
+    type: Number,
+    default: 1,
+  },
+})
+
+// Function to get the index value
+function getIndexValue() {
+  return props.index + 1
+}
+</script>
