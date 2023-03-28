@@ -97,10 +97,14 @@ export function _addPageToPages({
  * name and its route to the route's path. The Page's additional properties will
  * be set based on the route's `meta` object (if any).
  */
-export function _getRoutesAsPages(): Page[] {
-  const router = useRouter()
+export function _getRoutesAsPages({router}:{router:any}): Page[] {
+  
+  // logger.debug('[method: _getRoutesAsPages]', '[router]', {
+  //   router,
+  // })
+
   let routes = router.options.routes
-  return routes.map((route) => {
+  return routes.map((route:any) => {
     const { meta, name, path } = route
     return {
       id: name,
@@ -223,7 +227,7 @@ export function _defineStoreNavigation() {
   const appPages = ref<Page[]>([])
 
   // Get Vue Router Routes as Pages
-  const nuxtPages = _getRoutesAsPages()
+  const nuxtPages = _getRoutesAsPages({router:useRouter()})
 
   // Loop through the Vue Router routes and add them to the appPages array.
   for (const nuxtPage of nuxtPages) {
