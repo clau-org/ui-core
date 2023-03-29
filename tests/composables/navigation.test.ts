@@ -154,97 +154,133 @@ describe('[STORE NAVIGATION]', async () => {
 
   })
 
-  // describe('_getRoutesAsPages - Method to get the Nuxt Routes as Page objects', async () => {
-  //   let router // Use `any` type to mock `useRouter` hook
-  //   let routes // Use `any` type to mock Vue Router's `RouteConfig` interface
+  describe('_getRoutesAsPages - Method to get the Nuxt Routes as Page objects', async () => {
 
-  //   const useRouter = {
-  //     "options": {
-  //       "routes": [
-  //         {
-  //           "name": "home",
-  //           "path": "/home",
-  //           "meta": {
-  //             "navbar": {
-  //               "show": false
-  //             },
-  //             "footer": {
-  //               "show": true
-  //             },
-  //             "sidebar": {
-  //               "show": false
-  //             }
-  //           },
-  //           "alias": []
-  //         },
-  //         {
-  //           "name": "index",
-  //           "path": "/",
-  //           "meta": {
-  //             "navbar": {
-  //               "show": false
-  //             },
-  //             "footer": {
-  //               "show": false
-  //             },
-  //             "sidebar": {
-  //               "show": false
-  //             },
-  //             "layout": "dev"
-  //           },
-  //           "alias": []
-  //         },
-  //         {
-  //           "name": "some-nested",
-  //           "path": "/some/nested",
-  //           "meta": {
-  //             "navbar": {
-  //               "show": true
-  //             },
-  //             "footer": {
-  //               "show": true
-  //             },
-  //             "sidebar": {
-  //               "show": true
-  //             }
-  //           },
-  //           "alias": []
-  //         },
-  //         {
-  //           "name": "some-shit",
-  //           "path": "/some/shit",
-  //           "meta": {
-  //             "navbar": {
-  //               "show": true
-  //             },
-  //             "footer": {
-  //               "show": true
-  //             },
-  //             "sidebar": {
-  //               "show": true
-  //             }
-  //           },
-  //           "alias": []
-  //         }
-  //       ]
-  //     }
-  //   } 
 
-  //   test('returns empty array if no routes defined', ({ expect }) => {
-  //     routes = []
-  //     const pages = _getRoutesAsPages({router:useRouter})
-  //     expect(pages).toEqual([])
-  //   })
+    // Define an array of test routes, including names, paths, and metadata for some of the routes
+    const testRoutes = [      { name: 'home', path: '/' },      {        name: 'blog',        path: '/blog',        meta: {          title: 'Blog',          description: 'A collection of articles on various topics',        },      },      {        name: 'post',        path: '/blog/:slug',        meta: {          title: 'Blog Post',          description: 'A single blog post',        },      },    ];
 
-  //   test('returns Page object for each defined route', ({ expect }) => {
-  //     routes = [      {        name: 'home',        path: '/',        meta: {          title: 'Home Page',        },      },      {        name: 'about',        path: '/about',        meta: {          title: 'About Us',          layout: 'secondary',        },      },    ]
-  //     const expectedPages = [      {        id: 'home',        route: '/',        title: 'Home Page',      },      {        id: 'about',        route: '/about',        title: 'About Us',        layout: 'secondary',      },    ]
-  //     const pages = _getRoutesAsPages({router:useRouter})
-  //     expect(pages).toEqual(expectedPages)
-  //   })
-  // })
+    // Create a router object with the test routes
+    const router = { options: { routes: testRoutes } };
+
+    // Create a test that verifies that the _getRoutesAsPages function returns an array of pages with the correct properties
+    test('returns an array of pages with correct properties', ({ expect }) => {
+      const expectedPages: Page[] = [
+        { id: 'home', route: '/' },
+        {
+          id: 'blog',
+          route: '/blog',
+          title: 'Blog',
+          description: 'A collection of articles on various topics',
+        },
+        {
+          id: 'post',
+          route: '/blog/:slug',
+          title: 'Blog Post',
+          description: 'A single blog post',
+        },
+      ];
+
+      // Call the _getRoutesAsPages function with the router object and verify that it returns the expected array of pages
+      const pages = _getRoutesAsPages({ router });
+      expect(pages).toEqual(expectedPages);
+    });
+
+    // Create a test that verifies that the _getRoutesAsPages function returns an empty array if no routes are defined
+    test('returns an empty array if no routes are defined', ({ expect }) => {
+      const router = { options: { routes: [] } };
+      const pages = _getRoutesAsPages({ router });
+      expect(pages).toEqual([]);
+    });
+
+    // Create a test that verifies that the _getRoutesAsPages function adds any additional meta properties to the page object
+    test('adds any additional meta properties to page object', ({ expect }) => {
+      // Define an array of test routes with metadata for one of the routes
+      const testRoutesWithMeta = [
+        { name: 'page1', path: '/', meta: { foo: 'bar' } },
+        { name: 'page2', path: '/page2' },
+      ];
+      const router = { options: { routes: testRoutesWithMeta } };
+
+      const expectedPages: Page[] = [
+        { id: 'page1', route: '/', foo: 'bar' },
+        { id: 'page2', route: '/page2' },
+      ];
+
+      // Call the _getRoutesAsPages function with the router object and verify that it returns the expected array of pages with the added metadata
+      const pages = _getRoutesAsPages({ router });
+      expect(pages).toEqual(expectedPages);
+    });
+  })
 
   describe('_getTargetPages - Method to get the Pages of a given PageLabel target', async () => {
-    test('expect ', ({ expect }) => {})
+    const testPages: Page[] = [
+      {
+        id: 'page1',
+        route: '/page1',
+        navbar: {
+          id: 'navbar1',
+          show: true,
+        },
+        sidebar: {
+          id: 'sidebar1',
+          show: false,
+        },
+        footer: {
+          id: 'footer1',
+          show: true,
+        },
+      },
+      {
+        id: 'page2',
+        route: '/page2',
+        navbar: {
+          id: 'navbar2',
+          show: false,
+        },
+        sidebar: {
+          id: 'sidebar2',
+          show: true,
+        },
+        footer: {
+          id: 'footer2',
+          show: false,
+        },
+      },
+      {
+        id: 'page3',
+        route: '/page3',
+        navbar: {
+          id: 'navbar3',
+          show: true,
+        },
+        sidebar: {
+          id: 'sidebar3',
+          show: true,
+        },
+        footer: {
+          id: 'footer3',
+          show: false,
+        },
+      },
+    ]
+  
+    test('returns only pages with target show equal to true', ({ expect }) => {
+      const filteredPages = _getTargetPages({ pages: testPages, target: 'navbar' })
+      expect(filteredPages.length).toBe(2)
+      expect(filteredPages.map((page) => page.id)).toEqual(['page1', 'page3'])
+    })
+    
+    test('returns only pages with target show equal to true', ({ expect }) => {
+      const filteredPages = _getTargetPages({ pages: testPages, target: 'sidebar' })
+      expect(filteredPages.length).toBe(2)
+      expect(filteredPages.map((page) => page.id)).toEqual(['page2', 'page3'])
+    })
+   
+    test('returns only pages with target show equal to true', ({ expect }) => {
+      const filteredPages = _getTargetPages({ pages: testPages, target: 'footer' })
+      expect(filteredPages.length).toBe(1)
+      expect(filteredPages.map((page) => page.id)).toEqual(['page1'])
+    })
   })
 })
