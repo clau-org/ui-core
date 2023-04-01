@@ -1,12 +1,8 @@
 <template>
-  <div class="p-1">
-    <JsonViewer
-      :value="json"
-      copyable
-      sort
-      theme="jv-dark"
-      class="text-white bg-black rounded-lg p-1 overflow-auto min-w-min max-w-lg"
-    />
+  <div
+    class="p-1 text-white bg-black rounded-lg overflow-auto min-w-min max-w-lg"
+  >
+    <JsonViewer :value="json" copyable sort theme="jv-dark" class="" />
   </div>
 </template>
 
