@@ -4,19 +4,16 @@
 
     <UiPre
       :json="{
-        appPages,
-        nuxtPages,
+        input,
+        fn,
+        data,
+        error,
+        isLoading,
 
-        navbar,
-        footer,
-        sidebar,
-
-        navbarGrouped,
-        footerGrouped,
-        sidebarGrouped,
+        a, b, resul, sumStore
       }"
     />
-    <div class="max-w-sm bg-blue-200">
+    <!-- <div class="max-w-sm bg-blue-200">
       <h1>NAVBAR</h1>
       <div class="mx-5">
         <UiPageLabel :pageLabels="navbarGrouped">
@@ -41,51 +38,17 @@
   
         </UiPageLabel>  
       </div>
+    </div> -->
+
+    <div>
+      <button @click="toggleLoading()">toggleLoading - {{ loading }}</button>
     </div>
 
-    <!-- <div class="max-w-sm">
-      <h1>FOOTER</h1>
-      <UiPageLabel :pageLabels="footerGrouped">
-        
-        <template #child="{ pageLabel }" >
-          <button class="mb-2 flex w-full rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
-            <span class="underline">{{ pageLabel.title ?? pageLabel.id }}</span>
-          </button>
-        </template>
-        
-        <template #parent="{ open, pageLabel }">
-            <div class="mb-2 flex w-full rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
-              <span>{{ pageLabel.title ?? pageLabel.id }}</span>
-                <ChevronDownIcon v-if="open" class="h-5 w-5 text-purple-500" />
-                <ChevronRightIcon v-else class="h-5 w-5 text-purple-500" />
-            </div>
-        </template>
-
-      </UiPageLabel>  
-    </div> -->
-
-    <!-- <div class="max-w-sm">
-      <h1>SIDEBAR</h1>
-      <UiPageLabel :pageLabels="sidebarGrouped" >
-        
-        <template #child="{ pageLabel }" >
-          <button class="mb-2 flex w-full rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
-            <span class="underline">{{ pageLabel.title ?? pageLabel.id }}</span>
-          </button>
-        </template>
-        
-        <template #parent="{ open, pageLabel }">
-            <div class="mb-2 flex w-full rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
-              <span>{{ pageLabel.title ?? pageLabel.id }}</span>
-                <ChevronDownIcon v-if="open" class="h-5 w-5 text-purple-500" />
-                <ChevronRightIcon v-else class="h-5 w-5 text-purple-500" />
-            </div>
-        </template>
-
-      </UiPageLabel>  
-    </div> -->
-
-    <button @click="toggleLoading()">toggleLoading - {{ loading }}</button>
+    <input type="number" v-model="input.a"/>
+    <input type="number" v-model="input.b"/>
+    <div>
+      <button v-if="!isLoading" class="bg-blue-300 px-4" @click="fn()">Pito</button>
+    </div>
 
     <!-- <UiLoading :loading="loading">
       <UiPre :json="{ pages, navbar, sidebar, footer }" />
@@ -103,29 +66,33 @@
   /**
    * WARNING: Index page should not appear on navbar, footer or sidebar
    */
-  definePageMeta({
-    navbar: {
-      show: false,
-    },
-    footer: {
-      show: false,
-    },
-    sidebar: {
-      show: false,
-    },
-    layout: 'dev',
-  })
+
+  const {a, b, resul, sum:sumStore } = useCustomStore(useSumActions());
+
+  // const sum = async({a,b}) => {
+  //   a = parseInt(a)
+  //   b = parseInt(b) 
+  //   return new Promise(function(resolve, reject) { 
+  //       setTimeout(() => {
+  //           logger.debug({a,b})
+  //           resolve(a+b);
+  //       }, 10000)
+  //   });
+    
+  // }
 
   const {
-    appPages,
-    nuxtPages,
+    input,
+    fn,
 
-    navbar,
-    footer,
-    sidebar,
+    data,
+    error,
 
-    navbarGrouped,
-    footerGrouped,
-    sidebarGrouped,
-  } = useStoreNavigation()
+    isLoading,
+  } =  sumStore()
+
+
+
+  
+
 </script>
