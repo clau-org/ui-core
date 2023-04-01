@@ -1,4 +1,4 @@
-import { describe, test,     } from 'vitest'
+import { describe, test } from 'vitest'
 import { useAsyncFn } from '../../src/composables/fn'
 import { ref } from 'vue'
 import { setup } from '@nuxt/test-utils'
@@ -8,7 +8,9 @@ describe('useAsyncFn - Async function utility', () => {
     return input.value * 2
   }
 
-  test('expect data to be updated with the result of the async function', async ({ expect }) => {
+  test('expect data to be updated with the result of the async function', async ({
+    expect,
+  }) => {
     const { input, fn, data, isLoading } = useAsyncFn({
       input: ref(2),
       fn: mockFn,
@@ -19,7 +21,9 @@ describe('useAsyncFn - Async function utility', () => {
     expect(data.value).toBe(4)
   })
 
-  test('expect isLoading to be true while the async function is running', async ({ expect }) => {
+  test('expect isLoading to be true while the async function is running', async ({
+    expect,
+  }) => {
     const { input, fn, data, isLoading } = useAsyncFn({
       input: ref(2),
       fn: mockFn,
@@ -32,7 +36,9 @@ describe('useAsyncFn - Async function utility', () => {
     expect(isLoading.value).toBe(false)
   })
 
-  test('expect error to be updated when the async function throws an error', async ({ expect }) => {
+  test('expect error to be updated when the async function throws an error', async ({
+    expect,
+  }) => {
     const errorMockFn = async () => {
       throw new Error('Test error')
     }
