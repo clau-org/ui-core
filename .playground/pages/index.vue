@@ -10,7 +10,10 @@
         error,
         isLoading,
 
-        a, b, resul, sumStore
+        a,
+        b,
+        resul,
+        sumStore,
       }"
     />
     <!-- <div class="max-w-sm bg-blue-200">
@@ -44,10 +47,12 @@
       <button @click="toggleLoading()">toggleLoading - {{ loading }}</button>
     </div>
 
-    <input type="number" v-model="input.a"/>
-    <input type="number" v-model="input.b"/>
+    <input type="number" v-model="input.a" />
+    <input type="number" v-model="input.b" />
     <div>
-      <button v-if="!isLoading" class="bg-blue-300 px-4" @click="fn()">Pito</button>
+      <button v-if="!isLoading" class="bg-blue-300 px-4" @click="fn()">
+        Pito
+      </button>
     </div>
 
     <!-- <UiLoading :loading="loading">
@@ -67,18 +72,18 @@
    * WARNING: Index page should not appear on navbar, footer or sidebar
    */
 
-  const {a, b, resul, sum:sumStore } = useCustomStore(useSumActions());
+  const { a, b, resul, sum: sumStore } = useCustomStore(useSumActions())
 
   // const sum = async({a,b}) => {
   //   a = parseInt(a)
-  //   b = parseInt(b) 
-  //   return new Promise(function(resolve, reject) { 
+  //   b = parseInt(b)
+  //   return new Promise(function(resolve, reject) {
   //       setTimeout(() => {
   //           logger.debug({a,b})
   //           resolve(a+b);
   //       }, 10000)
   //   });
-    
+
   // }
 
   const {
@@ -89,10 +94,5 @@
     error,
 
     isLoading,
-  } =  sumStore()
-
-
-
-  
-
+  } = sumStore()
 </script>
