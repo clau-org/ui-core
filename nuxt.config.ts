@@ -29,7 +29,7 @@ export default defineNuxtConfig({
     '@nuxtjs/device',
     '@pinia-plugin-persistedstate/nuxt',
     'nuxt-schema-org',
-    "magic-regexp/nuxt",
+    'magic-regexp/nuxt',
 
     /**
      * TODO: Customize to:
