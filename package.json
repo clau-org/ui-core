@@ -9,7 +9,7 @@
     "test": "vitest run",
     "test:dev": "vitest",
     "coverage": "vitest run --coverage",
-    "build": "NITRO_PRESET=deno nuxt build .playground",
+    "build": "nuxt build .playground",
     "generate": "nuxt generate .playground",
     "preview": "cd .playground/.output/ && deno run -A --watch server/index.ts",
     "prepare": "nuxt prepare .playground",

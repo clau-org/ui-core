@@ -7,7 +7,6 @@ export default defineNuxtConfig({
    */
   runtimeConfig: {
     public: {
-      MAGICLINK_KEY: 'pk_live_3537E2E4D3D38899',
       BASE_SITE: 'https://clau-dev.com',
       BASE_API: 'https://api.clau-dev.com',
       BASE_BUCKET: 'https://bucket.clau-dev.com',
@@ -29,7 +28,7 @@ export default defineNuxtConfig({
     '@nuxtjs/device',
     '@pinia-plugin-persistedstate/nuxt',
     'nuxt-schema-org',
-    "magic-regexp/nuxt",
+    'magic-regexp/nuxt',
 
     /**
      * TODO: Customize to:
